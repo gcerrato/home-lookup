@@ -40,4 +40,7 @@ it('Look for a home - specific location', async () => {
   if (matches && matches.length) {
     console.log(`Amout of Homes found for the specific location: ${matches.length - 1}`);
   }
+  else {
+    console.log('No Homes found');
+  }
 })
