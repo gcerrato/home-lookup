@@ -1,12 +1,18 @@
 
-import { Builder, By, Key, until } from 'selenium-webdriver';
+import { Builder, By, Key, until, Capabilities } from 'selenium-webdriver';
 import 'selenium-webdriver/chrome';
 import 'chromedriver';
 import Util from './utils';
 
+const chromeCapabilities = Capabilities.chrome();
+chromeCapabilities.set('chromeOptions', {
+  'args': ['--headless', '--disable-gpu']
+});
+
 const rootURL = 'https://www.akelius.de/en/search/apartments/osten/berlin/list';
 const d = new Builder()
   .forBrowser('chrome')
+  .withCapabilities(chromeCapabilities)
   .build();
 let driver, el, actual, expected, utils;
 
@@ -18,7 +24,7 @@ it('waits for the driver to start', () => {
   })
 })
 
-it('initialises the context', async () => {
+it('init the context', async () => {
   await driver
     .manage()
     .window()
@@ -33,12 +39,19 @@ it('initialises the context', async () => {
 it('Look for a home - specific location', async () => {
   const listLinks = await utils.getElementByCss('.list-links');
   const text = await listLinks.getText();
-  const lookup = /berlin-(charlottenburg|wilmersdorf)/ig;
+  const lookup = /berlin-(friedrichshain|Friedrichsfelde)/ig;
 
   const matches = text.match(lookup);
 
+  const uniqueMatches = {};
+  matches.forEach((match) => {
+    uniqueMatches[match] = true;
+  });
+  const matchesArray = Object.keys(uniqueMatches);
+
   if (matches && matches.length) {
-    console.log(`Amout of Homes found for the specific location: ${matches.length - 1}`);
+    console.log(`Results for: ${matchesArray.join(', ')}`);
+    console.log(`Amout of Homes found for the specific location: ${matches.length - matchesArray.length}`);
   }
   else {
     console.log('No Homes found');
