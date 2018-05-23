@@ -39,17 +39,17 @@ it('init the context', async () => {
 it('Look for a home - specific location', async () => {
   const listLinks = await utils.getElementByCss('.list-links');
   const text = await listLinks.getText();
-  const lookup = /berlin-(friedrichshain|Friedrichsfelde)/ig;
+  const lookup = /berlin-(charlottenburg|wilmersdorf)/ig;
 
   const matches = text.match(lookup);
 
-  const uniqueMatches = {};
-  matches.forEach((match) => {
-    uniqueMatches[match] = true;
-  });
-  const matchesArray = Object.keys(uniqueMatches);
-
   if (matches && matches.length) {
+    const uniqueMatches = {};
+    matches.forEach((match) => {
+      uniqueMatches[match] = true;
+    });
+    const matchesArray = Object.keys(uniqueMatches);
+
     console.log(`Results for: ${matchesArray.join(', ')}`);
     console.log(`Amout of Homes found for the specific location: ${matches.length - matchesArray.length}`);
   }
